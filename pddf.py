@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import matplotlib
+
 
 # filttering in DataFrame
 movies = pd.read_csv('/home/development/Downloads/practice/movies1.csv')
@@ -116,3 +118,107 @@ no_duplicate = birds.duplicated().sum()
 # iv. Drop Duplicates rows and make this changes permanent. Show dataframe after changes.
 birds.drop_duplicates(inplace=True)
 # print(birds)
+
+
+###`Q-5:` In IPL matches dataset some teams name has changed. 
+# You will have to consider them as same.
+
+# 'Delhi Capitals' formerly as 'Delhi Daredevils' 
+# 'Punjab Kings' formerly as 'Kings XI Punjab'
+# 'Rising Pune Supergiant' formerly as 'Rising Pune Supergiants'
+
+# You need to make changes accordingly. Consider current name for each teams.
+
+# Be careful Gujrat Titans and Gujrat Lions are different teams. 
+team_changed = {
+    'Delhi Capitals': 'Delhi Daredevils',
+    'Punjab Kings': 'Kings XI Punjab',
+    'Rising Pune Supergiant': 'Rising Pune Supergiants'
+}
+matches.replace(team_changed, inplace=True)
+# print(matches[['Team1', 'Team2']])
+
+###`Q-6` Write a code which can display the bar chart of top 5 teams who have played maximum number of matches in the IPL.
+#  Hint: Be careful the data is divided in 2 different cols(Team 1 and Team 2)
+top5 = (matches['Team1'].value_counts()+ matches['Team2'].value_counts()).sort_values(ascending=False).head().plot(kind='bar')
+# print(top5)
+
+###`Q-7:` Player who got Most no. of player of the match award playing against Mumbai Indians.
+# > Just for this question assume player of the match award is given to players from winning team. Although this is true in most of the cases.
+lost_match = matches[matches['WinningTeam'] != 'Mumbai Indians']
+player_match = lost_match['Player_of_Match'].value_counts().idxmax()
+# print(player_match)
+
+# VALUE_COUNTS()
+# find which player has won most potm -> in finals and qualifiers
+
+potm = matches[~matches['MatchNumber'].str.isdigit()]['Player_of_Match'].value_counts().idxmax()
+# print(potm)
+
+# Toss decision plot
+toss = matches['TossDecision'].value_counts().plot(kind='pie')
+# print(toss)
+
+# how many matches each team has played
+match_played = (matches['Team1'].value_counts() + matches['Team2'].value_counts()).sort_values(ascending=False)
+# print(match_played)
+
+# SORT_VALUES()
+# sort movies on title_x 
+sorted = movies.sort_values('title_x')
+# print(sorted)
+
+students = pd.DataFrame(
+    {
+        'name':['nitish','ankit','rupesh',np.nan,'mrityunjay',np.nan,'rishabh',np.nan,'aditya',np.nan],
+        'college':['bit','iit','vit',np.nan,np.nan,'vlsi','ssit',np.nan,np.nan,'git'],
+        'branch':['eee','it','cse',np.nan,'me','ce','civ','cse','bio',np.nan],
+        'cgpa':[6.66,8.25,6.41,np.nan,5.6,9.0,7.4,10,7.4,np.nan],
+        'package':[4,5,6,np.nan,6,7,8,9,np.nan,np.nan]
+
+    }
+)
+
+# sorting students on basis of name 
+stu = students.sort_values('name', na_position='first')
+# print(stu)
+
+# sorting movies on basis of year_of_release,title_x
+sort_movies = movies.sort_values(['year_of_release','title_x'])
+# print(sort_movies)
+
+# RANK()
+batsman_runs = pd.read_csv('/home/development/Downloads/practice/batsman_runs_ipl.csv')
+# print(batsman_runs.head())
+batsman_runs['batting_rank'] = batsman_runs['batsman_run'].rank(ascending=False)
+# print(batsman_runs.sort_values('batting_rank'))
+
+# SORT_INDEX():
+ind = batsman_runs.sort_index(ascending=False)
+# print(ind)
+
+# SET_INDEX()
+batsman_runs.set_index('batter', inplace=True)
+# print(batsman_runs)
+
+# RESET_INDEX()
+batsman_runs.reset_index(inplace=True)
+# print(batsman_runs)
+
+# how to replace existing index without loosing
+batsman = batsman_runs.reset_index().set_index('batting_rank')
+# print(batsman)
+
+# RENAME()
+column_name = movies.rename(columns={'title_x': 'title', 'poster_path': 'link'})
+# print(column_name[['title', 'link']])
+
+movie = column_name.set_index('title')
+# print(movie)
+index_name = movie.rename(index={'Uri: The Surgical Strike': 'Uri', 'Battalion 609': 'Battalion'})
+# print(index_name.head())
+
+# UNIQUE() and NUNIQUE()
+# unique_value = len(matches['Season'].unique())
+unique_value = matches['Season'].nunique()
+print(unique_value)
