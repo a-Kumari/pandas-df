@@ -221,4 +221,67 @@ index_name = movie.rename(index={'Uri: The Surgical Strike': 'Uri', 'Battalion 6
 # UNIQUE() and NUNIQUE()
 # unique_value = len(matches['Season'].unique())
 unique_value = matches['Season'].nunique()
-print(unique_value)
+# print(unique_value)
+
+# ISNULL()
+null_value = students.isnull().sum()
+s_count = students['name'].isnull().sum()
+# print(s_count)
+# print(null_value)
+
+# NOTNULL()
+not_value = students.notnull()
+# print(not_value)
+
+# HASNANS
+has_nan_value = students['name'].hasnans
+# print(has_nan_value)
+
+# dropna()
+df = students.dropna()
+df2 = students.dropna(axis=1)
+df3 = students.dropna(how='all')
+df4 = students.dropna(thresh=2)
+df5 = students.dropna(subset=['name'])
+# print(df5)
+
+# fillna()
+students[['cgpa', 'package']] = students[['cgpa', 'package']].fillna(5.50)
+# print(students)
+
+# students[['college', 'branch']] = students[['college', 'branch']].fillna(method='ffill')
+# print(students)
+
+# drop_duplicates()
+marks = pd.DataFrame([
+    [100,80,10],
+    [90,70,7],
+    [120,100,14],
+    [80,70,14],
+    [80,70,14]
+],columns=['iq','marks','package'])
+
+df_unique = marks.drop_duplicates()
+df_dup = students['package'].drop_duplicates()
+# print(df_dup)
+# print(df_unique)
+
+# drop()
+df_new = marks.drop(1)
+df_new1 = marks.drop([4,2])
+df_new2 = marks.drop(columns=['iq'])
+df_new3 = marks.drop(['iq', 'package'], axis=1)
+# print(df_new3)
+
+# apply()
+df = pd.DataFrame({
+    'A': [1, 2, 3, 4],
+    'B': [5, 6, 7, 8]
+})
+df['A'] = df['A'].apply(lambda x: x *2)
+df['sum'] = df.apply(lambda row: row['A'] + row['B'], axis=1)
+def square(x):
+    return x** 2
+exp = df.apply(square)
+# print(df)
+print(exp)
