@@ -284,4 +284,113 @@ def square(x):
     return x** 2
 exp = df.apply(square)
 # print(df)
-print(exp)
+# print(exp)
+
+# Questions:
+fifa_worldcup = pd.read_csv('/home/development/Downloads/practice/Fifa Worldcup 2022 - Sheet1.csv')
+# print(fifa_worldcup.head())
+
+# Q-1: Use the football dataset. Find out the total percentages that each team made on target. 
+# Display the result as a python dictionary where the keys are the team list and the values are the percentage values. 
+# Round off the percentage values up to 2 decimal places.
+
+unique_count = fifa_worldcup['Team'].unique()
+result={}
+for team in unique_count:
+    team_df = fifa_worldcup[fifa_worldcup['Team'] == team]
+    total_attempts = team_df['Total Attempts'].sum()
+    on_targets = team_df['On Target'].sum()
+    per = round(float(on_targets / total_attempts * 100), 2)
+    result[team] = per  
+
+# print(result)
+
+
+# Q-2: Find out how many times the teams are played in this Fifa Worldcup-2022. On top of this, find out the ranks of the teams.
+
+match_played = pd.concat([fifa_worldcup['Team'], fifa_worldcup['Against']]).value_counts()
+teams_ranks = match_played.rank(ascending=False, method='first')
+# print(teams_ranks) 
+
+# Q-3: Find out these below topics:
+# The information about the Fifa worldcup dataset.
+wc_data = fifa_worldcup.head()
+# print(wc_data)
+# The description about the Fifa worldcup dataset
+desc = fifa_worldcup.describe()
+# print(desc)
+# Check is there any missing values, if there is any missing values, fill that value with the average value for that particular column.
+missing_value = fifa_worldcup.isna().sum()
+# print(missing_value)
+# Drop all the duplicate rows permanently.
+dup = fifa_worldcup.drop_duplicates(inplace=True)
+# print(dup)
+# Drop the columns: "Sl No", "Match No.", "Red Cards" and "Pts" permanently.
+fifa_worldcup.drop(columns=['Sl. No', 'Match No.', 'Red Cards', 'Pts'], inplace=True)
+# print(fifa_worldcup.head())
+
+
+# Q-4: Do these below operations:
+# Find out the rank based on the "Team" column and save the result by adding a new column named "Rank".
+fifa_worldcup['Rank'] = fifa_worldcup['Team'].rank(method='min', ascending=True)
+# print(fifa_worldcup[['Rank', 'Team']])
+# Change the datatype of this column to integer by using np.int16
+# print(fifa_worldcup['Rank'].astype(np.int16))
+# Set the index of the DataFrame by using this "Rank" column permanently.
+fifa_worldcup.set_index('Rank', inplace=True)
+# print(fifa_worldcup)
+# After that, sort the dataframe based on the "Rank" index.
+new_df = fifa_worldcup.sort_values('Rank', ascending=True)
+# print(new_df)
+
+#  Questions on Titanic dataset.
+test = pd.read_csv('/home/development/Downloads/practice/test-test.csv')
+train = pd.read_csv('/home/development/Downloads/practice/train-train.csv')
+
+# Q-5: Do the below tasks:
+# With dataset 1, drop those records which only have missing values of the "Age" column permanently.
+test.dropna(subset=['Age'], inplace=True)
+# print(test.isna().sum())
+
+# With the dataset 2, fill the missing values with 20 to the only "Age" column permanently.
+train.fillna({'Age':20}, inplace=True)
+# print(train.isna().sum())
+
+# functions
+# concat()
+df1 = pd.DataFrame({'A': [1, 2], 'B': [3, 4]})
+
+result = pd.concat([df1['A'], df1['B']])
+# print(result)
+
+df2 = pd.DataFrame({'C': [9, 10]})
+
+result = pd.concat([df1, df2], axis=1)
+# print(result)
+
+df3 = pd.DataFrame({'A': [5, 6], 'B': [7, 8]})
+
+result = pd.concat([df1, df3], keys=['First', 'Second'], axis=1)
+# print(result)
+
+result = pd.concat([df1, df3], keys=['First', 'Second'])
+# print(result)
+
+# isin()
+data = {
+    'Student': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
+    'Grade': ['A', 'B', 'A', 'C', 'B'],
+    'Age': [18, 19, 17, 18, 20]
+}
+df = pd.DataFrame(data)
+grades = ['A', 'B']
+filtered_df = df[df['Grade'].isin(grades)]
+
+# print(filtered_df)
+
+filter_value = {
+    'Grade': ['A', 'B'],
+    'Age': [18]
+}
+filtered_df = df[df['Grade'].isin(filter_value['Grade']) & df['Age'].isin(filter_value['Age'])]
+print(filtered_df)
